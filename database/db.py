@@ -86,7 +86,7 @@ class DatabaseManager:
 
 
 if __name__ == "__main__":
-    DOTENV_FILE = './envs.env'
+    DOTENV_FILE = '../envs.env'
     config = Config(RepositoryEnv(DOTENV_FILE))
 
     mysql_config = {
