@@ -95,7 +95,7 @@ class DatabaseManager:
 
 	def close(self):
 		"""
-		Close the database connection.
+		Closes the database connection.
 		"""
 		if self.conn:
 			self.conn.close()

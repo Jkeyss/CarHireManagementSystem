@@ -2,7 +2,7 @@ from flask import Flask, jsonify, request
 from werkzeug.exceptions import HTTPException
 from database.db import DatabaseManager
 from models.daos import CustomerDAO
-from controllers.customer_manager import CustomerManager
+from services.customer_service import CustomerService
 from decouple import Config, RepositoryEnv
 
 app = Flask(__name__)
@@ -20,9 +20,9 @@ db_manager = DatabaseManager(**mysql_config)
 db_manager.connect()
 db_manager.create_tables()
 
-# Create DAOs and Managers
+# Create DAOs, and Services
 customer_dao = CustomerDAO(db_manager)
-customer_manager = CustomerManager(customer_dao)
+customer_service = CustomerService(customer_dao)
 
 
 @app.route('/')
@@ -46,7 +46,7 @@ def get_customer(customer_id):
 	    a JSON of the customer object.
 	"""
 	try:
-		customer = customer_manager.get_customer(customer_id)
+		customer = customer_service.get_customer(customer_id)
 		return jsonify(customer=customer), 200
 	except HTTPException as error:
 		error.description = f"Customer with id: {customer_id} was not found in the database"
@@ -70,7 +70,7 @@ def update_customer(customer_id):
 	"""
 	customer_data = request.json
 	try:
-		customer = customer_manager.update_customer(customer_id, customer_data)
+		customer = customer_service.update_customer(customer_id, customer_data)
 		return jsonify(updated_customer=customer), 200
 	except HTTPException as error:
 		error.description = f"The Customer with {customer_id} could not be updated"
@@ -90,7 +90,7 @@ def add_customer():
 	"""
 	customer_data = request.json
 	try:
-		customer = customer_manager.add_customer(customer_data)
+		customer = customer_service.add_customer(customer_data)
 		return jsonify(customer=customer), 200
 	except HTTPException as error:
 		error.description = f"The Customer could not be added to the database"
@@ -113,7 +113,7 @@ def delete_customer(customer_id):
 	    a JSON of the customer object.
 	"""
 	try:
-		customer_manager.delete_customer(customer_id)
+		customer_service.delete_customer(customer_id)
 		return jsonify(success='success'), 200
 	except HTTPException as error:
 		error.description = f"Customer with id: {customer_id} could not be deleted"
