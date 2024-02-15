@@ -1,12 +1,13 @@
 from flask import Flask, jsonify, request
 from werkzeug.exceptions import HTTPException
 from database.db import DatabaseManager
-from DAOs.dao import CustomerDAO
-from managers.managers import CustomerManager
+from models.daos import CustomerDAO
+from controllers.customer_manager import CustomerManager
 from decouple import Config, RepositoryEnv
 
 app = Flask(__name__)
 
+# Connect to database
 DOTENV_FILE = './envs.env'
 config = Config(RepositoryEnv(DOTENV_FILE))
 mysql_config = {
@@ -18,6 +19,8 @@ mysql_config = {
 db_manager = DatabaseManager(**mysql_config)
 db_manager.connect()
 db_manager.create_tables()
+
+# Create DAOs and Managers
 customer_dao = CustomerDAO(db_manager)
 customer_manager = CustomerManager(customer_dao)
 
@@ -41,7 +44,13 @@ def get_customer(customer_id):
 # HTTP PUT -> an endpoint to update customer
 @app.route('/update-customer/<int:customer_id>', methods=['PUT'])
 def update_customer(customer_id):
-	pass
+	customer_data = request.json
+	try:
+		customer = customer_manager.update_customer(customer_id, customer_data)
+		return jsonify(updated_customer=customer), 200
+	except HTTPException as error:
+		error.description = f"The Customer with {customer_id} could not be updated"
+		return jsonify(error={error.name: error.description}), error.code
 
 
 # HTTP POST -> an endpoint to add new customer
@@ -59,7 +68,12 @@ def add_customer():
 # HTTP DELETE -> an endpoint to delete customer
 @app.route('/delete-customer/<int:customer_id>', methods=['DELETE'])
 def delete_customer(customer_id):
-	pass
+	try:
+		customer_manager.delete_customer(customer_id)
+		return jsonify(success='success'), 200
+	except HTTPException as error:
+		error.description = f"Customer with id: {customer_id} could not be deleted"
+		return jsonify(error={error.name: error.description}), error.code
 
 
 if __name__ == '__main__':

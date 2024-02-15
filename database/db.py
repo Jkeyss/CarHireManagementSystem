@@ -1,5 +1,4 @@
 import pymysql
-from decouple import Config, RepositoryEnv
 
 
 class DatabaseManager:
@@ -86,20 +85,3 @@ class DatabaseManager:
     def close(self):
         if self.conn:
             self.conn.close()
-
-
-# if __name__ == "__main__":
-#     DOTENV_FILE = '../envs.env'
-#     config = Config(RepositoryEnv(DOTENV_FILE))
-#
-#     mysql_config = {
-#         'host': config('DB_HOST'),
-#         'user': config('DB_USER'),
-#         'password':  config('DB_PASSWORD'),
-#         'database': config('DB_DATABASE')
-#     }
-#
-#     db_manager = DatabaseManager(**mysql_config)
-#     db_manager.connect()
-#     db_manager.create_tables()
-#     db_manager.close()

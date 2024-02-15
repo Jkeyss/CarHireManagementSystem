@@ -5,6 +5,7 @@ class BaseDAO:
         self.table_name = table_name
         self.id_name = id_name
 
+
     def add(self, data):
         conn = self.db_manager.get_connection()
         cursor = conn.cursor()
@@ -13,15 +14,12 @@ class BaseDAO:
         sql = f"INSERT INTO {self.table_name} ({columns}) VALUES ({values})"
         cursor.execute(sql, list(data.values()))
         conn.commit()
-
         # Get the ID of the last inserted row
-        customer_id = cursor.lastrowid
-
-        # Fetch the newly inserted customer from the database
-        customer = self.get(customer_id)
-
+        record_id = cursor.lastrowid
+        # Fetch the newly inserted object from the database
+        record = self.get(record_id)
         cursor.close()
-        return customer
+        return record
 
     def update(self, identifier, data):
         conn = self.db_manager.get_connection()
@@ -30,7 +28,9 @@ class BaseDAO:
         sql = f"UPDATE {self.table_name} SET {set_clause} WHERE {self.id_name} = %s"
         cursor.execute(sql, list(data.values()) + [identifier])
         conn.commit()
+        record = self.get(identifier)
         cursor.close()
+        return record
 
     def delete(self, identifier):
         conn = self.db_manager.get_connection()
@@ -51,6 +51,7 @@ class BaseDAO:
             return self.row_to_dict(row, cursor.description)
         return None
 
+    # UTILITY METHOD --> Turn Fetched Rows into Dictionary
     def row_to_dict(self, row, column_descriptions):
         dictionary = {}
         for column, value in zip(column_descriptions, row):
