@@ -1,11 +1,20 @@
-class CustomerService:
+from services.base_service import BaseService
+
+
+class CustomerService(BaseService):
 	"""
-	A service to handle customer business logic that then routes the data to
+	A service to handle customer logic that then routes the data to
 	the Customer DAO to perform CRUD operations.
 	"""
 
 	def __init__(self, customer_dao):
-		self.customer_dao = customer_dao
+		required_fields = {
+			"first_name",
+			"last_name",
+			"email",
+			"phone"
+		}
+		super().__init__(customer_dao, required_fields)
 
 	def add_customer(self, customer_data):
 		"""
@@ -24,13 +33,12 @@ class CustomerService:
 			inserted into the database.
 		"""
 		# Add Customer to Database
-		customer = self.customer_dao.add(customer_data)
-		return customer
+		return super().create_record(customer_data)
 
 	def update_customer(self, customer_id, customer_data):
 		"""
 		Validates input then sends it to the customer DAO to update the
-		customer with customer_id in the database.
+		customer with customer_id.
 
 		Parameters
 		----------
@@ -45,14 +53,7 @@ class CustomerService:
 			A dictionary containing the data from the record that was just
 			updated in the database.
 		"""
-		if not self._is_valid_customer_data(customer_data):
-			raise ValueError("Invalid customer data")
-		if not self.customer_dao.get(customer_id):
-			raise ValueError("Customer does not exist")
-
-		# Update Customer in Database
-		customer = self.customer_dao.update(customer_id, customer_data)
-		return customer
+		return super().update_record(customer_id, customer_data)
 
 	def delete_customer(self, customer_id):
 		"""
@@ -64,11 +65,7 @@ class CustomerService:
 		customer_id : int
 			The customer's id
 		"""
-		if not self.customer_dao.get(customer_id):
-			raise ValueError("Customer does not exist")
-
-		# Delete customer from database
-		self.customer_dao.delete(customer_id)
+		return super().delete_record(customer_id)
 
 	def get_customer(self, customer_id):
 		"""
@@ -85,25 +82,4 @@ class CustomerService:
 			A dictionary containing the data from the record that was retrieved
 			from the database.
 		"""
-		if not self.customer_dao.get(customer_id):
-			raise ValueError("Customer does not exist")
-		return self.customer_dao.get(customer_id)
-
-	def _is_valid_customer_data(self, customer_data):
-		"""
-		Validates the input to make sure all required fields are included.
-
-		Parameters
-		----------
-		customer_data : dict
-			A dictionary containing the customer data.
-
-		Returns
-		-------
-		bool
-			True if the required data is included, otherwise False.
-		"""
-		if not isinstance(customer_data, dict):
-			return False
-		required_fields = {"first_name", "last_name", "email", "phone"}
-		return all(field in customer_data for field in required_fields)
+		return super().get_record(customer_id)

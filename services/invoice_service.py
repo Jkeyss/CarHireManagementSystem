@@ -1,9 +1,15 @@
 from datetime import datetime
+from services.base_service import BaseService
 
 
-class InvoiceService:
+class InvoiceService(BaseService):
 	def __init__(self, invoice_dao, booking_dao, booking_service):
-		self.invoice_dao = invoice_dao
+		required_fields = {
+			"booking_id",
+			"total_amount",
+			"payment_date"
+		}
+		super().__init__(invoice_dao, required_fields)
 		self.booking_dao = booking_dao
 		self.booking_service = booking_service
 
@@ -32,12 +38,12 @@ class InvoiceService:
 			"total_amount": total_amount,
 			"payment_date": None
 		}
-		return self.invoice_dao.add(invoice_data)
+		return self.dao.add(invoice_data)
 
 	def update_invoice(self, invoice_id, invoice):
 		"""
 		Validates input then sends data to the invoice DAO to update the
-		record with invoice_id in the database.
+		record with invoice_id
 
 		Parameters
 		----------
@@ -52,11 +58,7 @@ class InvoiceService:
 			A dictionary containing the data from the record that was just
 			updated in the database.
 		"""
-		if not self._validate_invoice_fields(invoice):
-			raise ValueError("Invalid invoice data")
-		if not self.invoice_dao.get(invoice_id):
-			raise ValueError("Invalid invoice_id")
-		return self.invoice_dao.update(invoice_id, invoice)
+		super().update_record(invoice_id, invoice)
 
 	def get_invoice(self, invoice_id):
 		"""
@@ -73,9 +75,7 @@ class InvoiceService:
 			A dictionary containing the data from the record that was retrieved
 			from the database.
 		"""
-		if not self.invoice_dao.get(invoice_id):
-			raise ValueError("Invoice does not exist")
-		return self.invoice_dao.get(invoice_id)
+		super().get_record(invoice_id)
 
 	def delete_invoice(self, invoice_id):
 		"""
@@ -86,7 +86,8 @@ class InvoiceService:
 		invoice_id : int
 			The invoice's id
 		"""
-		return self.invoice_dao.delete(invoice_id)
+		super().delete_record(invoice_id)
+
 
 	def handle_payment(self, invoice_id):
 		"""
@@ -105,7 +106,7 @@ class InvoiceService:
 			A dictionary containing the data from the invoice that was
 			updated in the database.
 		"""
-		invoice = self.invoice_dao.get(invoice_id)
+		invoice = self.dao.get(invoice_id)
 		booking_id = invoice['booking_id']
 		booking = self.booking_dao.get(booking_id)
 
@@ -119,25 +120,6 @@ class InvoiceService:
 		booking['payment_status'] = 'PAID'
 		self.booking_service.update_booking(booking_id, booking)
 		return self.update_invoice(invoice_id, invoice)
-
-	def _validate_invoice_fields(self, invoice_data):
-		"""
-		Validates the input to make sure all required fields are included.
-
-		Parameters
-		----------
-		invoice_data : dict
-			A dictionary containing the vehicle data.
-
-		Returns
-		-------
-		bool
-			True if the required data is included, otherwise False.
-		"""
-		if not isinstance(invoice_data, dict):
-			return False
-		required_fields = {"booking_id", "total_amount", "payment_date"}
-		return all(field in invoice_data for field in required_fields)
 
 
 def calculate_total_amount(booking, daily_rate=200.75):
