@@ -1,0 +1,140 @@
+{
+	"info": {
+		"_postman_id": "89800f1f-57b8-4d4e-b2ec-9008e05871c0",
+		"name": "car_hire_management_endpoint_tests",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "16728293"
+	},
+	"item": [
+		{
+			"name": "Add Customer",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "  {\r\n    \"first_name\": \"John\",\r\n    \"last_name\": \"Doe\",\r\n    \"email\": \"john.doe@example.com\",\r\n    \"phone\": \"123-456-7890\"\r\n  }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/add-customer",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"add-customer"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Customer",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "  {\r\n    \"first_name\": \"John\",\r\n    \"last_name\": \"Doe\",\r\n    \"email\": \"john.doe@example.com\",\r\n    \"phone\": \"123-456-7890\"\r\n  }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/get-customer/1",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"get-customer",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Customer",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "  {\r\n    \"first_name\": \"John\",\r\n    \"last_name\": \"Doe\",\r\n    \"email\": \"john.doe@example.com\",\r\n    \"phone\": \"123-456-7890\"\r\n  }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/delete-customer/1",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"delete-customer",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Customer",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "  {\r\n    \"first_name\": \"Jo\",\r\n    \"last_name\": \"Doe\",\r\n    \"email\": \"john.doe@example.com\",\r\n    \"phone\": \"123-456-7890\"\r\n  }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/update-customer/1",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"update-customer",
+						"1"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
