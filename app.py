@@ -20,7 +20,7 @@ db_manager = DatabaseManager(**mysql_config)
 db_manager.connect()
 db_manager.create_tables()
 
-# Create DAOs and Managers
+# Create DAOs, Managers and Services
 customer_dao = CustomerDAO(db_manager)
 customer_manager = CustomerManager(customer_dao)
 

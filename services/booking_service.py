@@ -6,13 +6,11 @@ class BookingOperations:
     def validate_booking_duration(self, booking_data):
         date_hired = booking_data.get('date_hired')
         return_date = booking_data.get('return_date')
-
         if (return_date - date_hired).days > 7:
             raise ValueError("Booking duration cannot exceed 7 days")
 
     def validate_vehicle_availability(self, booking_data):
         vehicle_id = booking_data.get('vehicle_id')
-
         if not self.vehicle_service.check_availability(vehicle_id):
             raise ValueError("Vehicle is not available for booking")
 
