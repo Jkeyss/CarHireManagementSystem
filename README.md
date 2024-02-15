@@ -48,7 +48,6 @@ The main focus of the business is renting cars and vans, and the database is to 
 
 ## TODO (Out of Scope):
 * Create endpoints for the Invoice, Booking and Vehicle entities.
-* Create manager (controller) classes for Invoice, Booking and Vehicle.
 * Create separate routing files for entity endpoints once above is completed.
 * Create the front end implementation (views).
 * Create Unit Tests
