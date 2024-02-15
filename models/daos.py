@@ -144,6 +144,39 @@ class BookingDAO(BaseDAO):
 	def __init__(self, db_manager):
 		super().__init__(db_manager, "Booking", "booking_id")
 
+	def is_vehicle_available(self, vehicle_id, start_date, end_date):
+		conn = self.db_manager.get_connection()
+		cursor = conn.cursor()
+
+		sql = """
+		    SELECT COUNT(*)
+		    FROM Booking
+		    WHERE vehicle_id = %s
+		    AND return_date > %s
+		    AND date_hired < %s
+		"""
+		cursor.execute(sql, (vehicle_id, start_date, end_date))
+		count = cursor.fetchone()[0]
+
+		cursor.close()
+		conn.close()
+
+		return count == 0
+
+	def get_daily_bookings(self):
+		conn = self.db_manager.get_connection()
+		cursor = conn.cursor()
+		sql = f"WHERE DATE(date_hired) = CURDATE();"
+		cursor.execute(sql)
+		rows = cursor.fetchone()
+		cursor.close()
+		if rows:
+			bookings = []
+			for row in rows:
+				bookings.append(self.row_to_dict(row, cursor.description))
+			return bookings
+		return None
+
 
 class InvoiceDAO(BaseDAO):
 	def __init__(self, db_manager):

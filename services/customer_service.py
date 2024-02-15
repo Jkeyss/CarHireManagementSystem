@@ -1,9 +1,6 @@
-from models.models import Customer
-
-
-class CustomerManager:
+class CustomerService:
 	"""
-	A controller to handle input validation that then routes the data to
+	A service to handle customer business logic that then routes the data to
 	the Customer DAO to perform CRUD operations.
 	"""
 
@@ -23,12 +20,9 @@ class CustomerManager:
 		Returns
 		-------
 		dict
-			A dictionary containing the data from the row that was just
+			A dictionary containing the data from the record that was just
 			inserted into the database.
 		"""
-		if not self._is_valid_customer_data(customer_data):
-			raise ValueError("Invalid customer data")
-
 		# Add Customer to Database
 		customer = self.customer_dao.add(customer_data)
 		return customer
@@ -48,11 +42,13 @@ class CustomerManager:
 		Returns
 		-------
 		dict
-			A dictionary containing the data from the row that was just
+			A dictionary containing the data from the record that was just
 			updated in the database.
 		"""
 		if not self._is_valid_customer_data(customer_data):
 			raise ValueError("Invalid customer data")
+		if not self.customer_dao.get(customer_id):
+			raise ValueError("Customer does not exist")
 
 		# Update Customer in Database
 		customer = self.customer_dao.update(customer_id, customer_data)
@@ -68,7 +64,7 @@ class CustomerManager:
 		customer_id : int
 			The customer's id
 		"""
-		if not self.get_customer(customer_id):
+		if not self.customer_dao.get(customer_id):
 			raise ValueError("Customer does not exist")
 
 		# Delete customer from database
@@ -86,9 +82,11 @@ class CustomerManager:
 		Returns
 		-------
 		dict
-			A dictionary containing the data from the row that was retrieved
+			A dictionary containing the data from the record that was retrieved
 			from the database.
 		"""
+		if not self.customer_dao.get(customer_id):
+			raise ValueError("Customer does not exist")
 		return self.customer_dao.get(customer_id)
 
 	def _is_valid_customer_data(self, customer_data):
