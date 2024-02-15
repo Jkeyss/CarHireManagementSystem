@@ -3,9 +3,8 @@ from models.models import Customer
 
 class CustomerManager:
 	"""
-	A controller to handle the business logic for the Customer entity.
-	Handles input validation and routes the data to the relevant DAO
-	to perform CRUD operations.
+	A controller to handle input validation that then routes the data to
+	the Customer DAO to perform CRUD operations.
 	"""
 
 	def __init__(self, customer_dao):
