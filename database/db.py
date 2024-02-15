@@ -21,6 +21,9 @@ class DatabaseManager:
             self.cursor = None
             self.initialized = True
 
+    def get_connection(self):
+        return self.conn
+
     def connect(self):
         if not self.conn:
             self.conn = pymysql.connect(
@@ -34,43 +37,43 @@ class DatabaseManager:
     def create_tables(self):
         create_customer_table = """
         CREATE TABLE IF NOT EXISTS Customer (
-            CustomerID INT AUTO_INCREMENT PRIMARY KEY,
-            FirstName VARCHAR(50),
-            LastName VARCHAR(50),
-            Email VARCHAR(100),
-            Phone VARCHAR(20)
+            customer_id INT AUTO_INCREMENT PRIMARY KEY,
+            first_name VARCHAR(50),
+            last_name VARCHAR(50),
+            email VARCHAR(100),
+            phone VARCHAR(20)
         )
         """
         create_vehicle_table = """
         CREATE TABLE IF NOT EXISTS Vehicle (
-            VehicleID INT AUTO_INCREMENT PRIMARY KEY,
-            Type VARCHAR(50),
-            Model VARCHAR(50),
-            Make VARCHAR(50),
-            Year INT,
-            RegistrationNumber VARCHAR(50),
-            Available BOOLEAN
+            vehicle_id INT AUTO_INCREMENT PRIMARY KEY,
+            type VARCHAR(50),
+            model VARCHAR(50),
+            make VARCHAR(50),
+            year INT,
+            registration_number VARCHAR(50),
+            available BOOLEAN
         )
         """
         create_booking_table = """
         CREATE TABLE IF NOT EXISTS Booking (
-            BookingID INT AUTO_INCREMENT PRIMARY KEY,
-            CustomerID INT,
-            VehicleID INT,
-            DateHired DATE,
-            ReturnDate DATE,
-            PaymentStatus VARCHAR(20),
-            FOREIGN KEY (CustomerID) REFERENCES Customer(CustomerID),
-            FOREIGN KEY (VehicleID) REFERENCES Vehicle(VehicleID)
+            booking_id INT AUTO_INCREMENT PRIMARY KEY,
+            customer_id INT,
+            vehicle_id INT,
+            date_hired DATE,
+            return_date DATE,
+            payment_status VARCHAR(20),
+            FOREIGN KEY (customer_id) REFERENCES Customer(customer_id),
+            FOREIGN KEY (vehicle_id) REFERENCES Vehicle(vehicle_id)
         )
         """
         create_invoice_table = """
         CREATE TABLE IF NOT EXISTS Invoice (
-            InvoiceID INT AUTO_INCREMENT PRIMARY KEY,
-            BookingID INT,
-            TotalAmount FLOAT,
-            PaymentDate DATE,
-            FOREIGN KEY (BookingID) REFERENCES Booking(BookingID)
+            invoice_id INT AUTO_INCREMENT PRIMARY KEY,
+            booking_id INT,
+            total_amount FLOAT,
+            payment_date DATE,
+            FOREIGN KEY (booking_id) REFERENCES Booking(booking_id)
         )
         """
         self.cursor.execute(create_customer_table)
@@ -85,18 +88,18 @@ class DatabaseManager:
             self.conn.close()
 
 
-if __name__ == "__main__":
-    DOTENV_FILE = '../envs.env'
-    config = Config(RepositoryEnv(DOTENV_FILE))
-
-    mysql_config = {
-        'host': config('DB_HOST'),
-        'user': config('DB_USER'),
-        'password':  config('DB_PASSWORD'),
-        'database': config('DB_DATABASE')
-    }
-
-    db_manager = DatabaseManager(**mysql_config)
-    db_manager.connect()
-    db_manager.create_tables()
-    db_manager.close()
+# if __name__ == "__main__":
+#     DOTENV_FILE = '../envs.env'
+#     config = Config(RepositoryEnv(DOTENV_FILE))
+#
+#     mysql_config = {
+#         'host': config('DB_HOST'),
+#         'user': config('DB_USER'),
+#         'password':  config('DB_PASSWORD'),
+#         'database': config('DB_DATABASE')
+#     }
+#
+#     db_manager = DatabaseManager(**mysql_config)
+#     db_manager.connect()
+#     db_manager.create_tables()
+#     db_manager.close()
