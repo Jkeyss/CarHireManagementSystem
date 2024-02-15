@@ -33,6 +33,18 @@ def hello_world():
 # HTTP GET -> an endpoint to get customer
 @app.route('/get-customer/<int:customer_id>', methods=['GET'])
 def get_customer(customer_id):
+	"""
+	Gets customer by customer_id.
+
+	Parameters
+	----------
+	customer_id : int
+	    The customer_id of the customer to be retrieved from database.
+	Returns
+	-------
+	flask.Response
+	    a JSON of the customer object.
+	"""
 	try:
 		customer = customer_manager.get_customer(customer_id)
 		return jsonify(customer=customer), 200
@@ -44,6 +56,18 @@ def get_customer(customer_id):
 # HTTP PUT -> an endpoint to update customer
 @app.route('/update-customer/<int:customer_id>', methods=['PUT'])
 def update_customer(customer_id):
+	"""
+	Updates customer data.
+
+	Parameters
+	----------
+	customer_id : int
+	    The customer_id of the customer to be updated in the database.
+	Returns
+	-------
+	flask.Response
+	    a JSON of the customer object.
+	"""
 	customer_data = request.json
 	try:
 		customer = customer_manager.update_customer(customer_id, customer_data)
@@ -56,6 +80,14 @@ def update_customer(customer_id):
 # HTTP POST -> an endpoint to add new customer
 @app.route('/add-customer', methods=['POST'])
 def add_customer():
+	"""
+	Adds customer to database.
+
+	Returns
+	-------
+	flask.Response
+	    a JSON of the customer object.
+	"""
 	customer_data = request.json
 	try:
 		customer = customer_manager.add_customer(customer_data)
@@ -68,6 +100,18 @@ def add_customer():
 # HTTP DELETE -> an endpoint to delete customer
 @app.route('/delete-customer/<int:customer_id>', methods=['DELETE'])
 def delete_customer(customer_id):
+	"""
+	Deletes customer from database.
+
+	Parameters
+	----------
+	customer_id : int
+	    The customer_id of the customer to be deleted in the database.
+	Returns
+	-------
+	flask.Response
+	    a JSON of the customer object.
+	"""
 	try:
 		customer_manager.delete_customer(customer_id)
 		return jsonify(success='success'), 200

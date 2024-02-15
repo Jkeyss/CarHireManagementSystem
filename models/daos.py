@@ -1,5 +1,12 @@
 
 class BaseDAO:
+    """
+    A base DAO class to be called by the child DAO's. The relevant
+    CRUD operations will be handled dynamically by the child DAO
+    injecting its manager class, table name and id name on
+    initialization.
+    """
+
     def __init__(self, db_manager, table_name, id_name):
         self.db_manager = db_manager
         self.table_name = table_name
@@ -51,7 +58,6 @@ class BaseDAO:
             return self.row_to_dict(row, cursor.description)
         return None
 
-    # UTILITY METHOD --> Turn Fetched Rows into Dictionary
     def row_to_dict(self, row, column_descriptions):
         dictionary = {}
         for column, value in zip(column_descriptions, row):

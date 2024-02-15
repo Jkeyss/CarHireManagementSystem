@@ -2,6 +2,12 @@ import pymysql
 
 
 class DatabaseManager:
+    """
+    A Singleton to handle connection to the database and store the
+    database for DAO access. Additionally, this class will create the
+    database tables if they are not yet created.
+    """
+
     _instance = None
 
     # Make sure the class is a Singleton
