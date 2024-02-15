@@ -22,7 +22,7 @@ class CustomerManager:
 
         Returns
         -------
-       dict
+        dict
             A dictionary containing the data from the row that was just
             inserted into the database.
         """
@@ -47,7 +47,7 @@ class CustomerManager:
 
 		Returns
 		-------
-	   dict
+	    dict
 			A dictionary containing the data from the row that was just
 			updated in the database.
 		"""
@@ -85,7 +85,7 @@ class CustomerManager:
 
 		Returns
 		-------
-	   dict
+	    dict
 			A dictionary containing the data from the row that was retrieved
 			from the database.
 		"""
@@ -103,7 +103,7 @@ class CustomerManager:
 
 		Returns
 		-------
-	   bool
+	    bool
 			True if the required data is included, otherwise False.
 		"""
         if not isinstance(customer_data, dict):
